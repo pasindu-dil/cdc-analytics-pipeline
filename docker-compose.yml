@@ -68,19 +68,19 @@ services:
   # ─────────────────────────────────────────
   # 3. KAFKA UI
   # ─────────────────────────────────────────
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
-    networks:
-      - auto-net
-    depends_on:
-      kafka:
-        condition: service_healthy
-    ports:
-      - "8080:8080"
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+  # kafka-ui:
+  #   image: provectuslabs/kafka-ui:latest
+  #   container_name: kafka-ui
+  #   networks:
+  #     - auto-net
+  #   depends_on:
+  #     kafka:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     KAFKA_CLUSTERS_0_NAME: local
+  #     KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
  
   # ─────────────────────────────────────────
   # 4. MYSQL
@@ -179,98 +179,98 @@ services:
   # 7. HyperDX (optional, for monitoring)
   # ─────────────────────────────────────────
 
-  hyperdx:
-    image: docker.hyperdx.io/hyperdx/hyperdx:2
-    container_name: hyperdx
-    networks:
-      - auto-net
-    ports:
-      - "8000:8000" #UI
-      - "8001:8001" #API
-    environment:
-      FRONTEND_URL: http://localhost:8000
-      HYPERDX_API_KEY: your_api_key_here
-      HYPERDX_API_PORT: 8001
-      HYPERDX_APP_PORT: 8000
-      HYPERDX_APP_URL: http://localhost:8000
-      HYPERDX_LOG_LEVEL: INFO
-      MINER_API_URL: "http://miner:5123"
-      MONGO_URI: "mongodb://mongodb:27017/hyperdx"
-      SERVER_URL: http://127.0.0.1:8001
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
-      OTEL_SERVICE_NAME: "hdx-oss-app"
-      USAGE_STATS_ENABLED: "true"
-      DEFAULT_CONNECTIONS: '[{"name":"Local
-        ClickHouse","host":"http://clickhouse:8123","username":"root","password":"root"}]'
-      DEFAULT_SOURCES: >
-        [
-          {
-            "from":{"databaseName":"default","tableName":"otel_logs"},
-            "kind":"log",
-            "timestampValueExpression":"TimestampTime",
-            "name":"Logs",
-            "displayedTimestampValueExpression":"Timestamp",
-            "implicitColumnExpression":"Body",
-            "serviceNameExpression":"ServiceName",
-            "bodyExpression":"Body",
-            "eventAttributesExpression":"LogAttributes",
-            "resourceAttributesExpression":"ResourceAttributes",
-            "defaultTableSelectExpression":"Timestamp,ServiceName,SeverityText,Body",
-            "severityTextExpression":"SeverityText",
-            "traceIdExpression":"TraceId",
-            "spanIdExpression":"SpanId",
-            "connection":"Local ClickHouse"
-          },
-          {
-            "from":{"databaseName":"default","tableName":"otel_traces"},
-            "kind":"trace",
-            "timestampValueExpression":"Timestamp",
-            "name":"Traces",
-            "displayedTimestampValueExpression":"Timestamp",
-            "implicitColumnExpression":"SpanName",
-            "serviceNameExpression":"ServiceName",
-            "eventAttributesExpression":"SpanAttributes",
-            "resourceAttributesExpression":"ResourceAttributes",
-            "defaultTableSelectExpression":"Timestamp,ServiceName,StatusCode,round(Duration/1e6),SpanName",
-            "traceIdExpression":"TraceId",
-            "spanIdExpression":"SpanId",
-            "durationExpression":"Duration",
-            "parentSpanIdExpression":"ParentSpanId",
-            "spanNameExpression":"SpanName",
-            "spanKindExpression":"SpanKind",
-            "statusCodeExpression":"StatusCode",
-            "connection":"Local ClickHouse"
-          }
-        ]
-    volumes:
-      - ./hyperdx-config:/app/config
-    depends_on:
-      - clickhouse
-      - mysql
-      - otel-collector
-      - mongodb
+  # hyperdx:
+  #   image: docker.hyperdx.io/hyperdx/hyperdx:2
+  #   container_name: hyperdx
+  #   networks:
+  #     - auto-net
+  #   ports:
+  #     - "8000:8000" #UI
+  #     - "8001:8001" #API
+  #   environment:
+  #     FRONTEND_URL: http://localhost:8000
+  #     HYPERDX_API_KEY: your_api_key_here
+  #     HYPERDX_API_PORT: 8001
+  #     HYPERDX_APP_PORT: 8000
+  #     HYPERDX_APP_URL: http://localhost:8000
+  #     HYPERDX_LOG_LEVEL: INFO
+  #     MINER_API_URL: "http://miner:5123"
+  #     MONGO_URI: "mongodb://mongodb:27017/hyperdx"
+  #     SERVER_URL: http://127.0.0.1:8001
+  #     OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+  #     OTEL_SERVICE_NAME: "hdx-oss-app"
+  #     USAGE_STATS_ENABLED: "true"
+  #     DEFAULT_CONNECTIONS: '[{"name":"Local
+  #       ClickHouse","host":"http://clickhouse:8123","username":"root","password":"root"}]'
+  #     DEFAULT_SOURCES: >
+  #       [
+  #         {
+  #           "from":{"databaseName":"default","tableName":"otel_logs"},
+  #           "kind":"log",
+  #           "timestampValueExpression":"TimestampTime",
+  #           "name":"Logs",
+  #           "displayedTimestampValueExpression":"Timestamp",
+  #           "implicitColumnExpression":"Body",
+  #           "serviceNameExpression":"ServiceName",
+  #           "bodyExpression":"Body",
+  #           "eventAttributesExpression":"LogAttributes",
+  #           "resourceAttributesExpression":"ResourceAttributes",
+  #           "defaultTableSelectExpression":"Timestamp,ServiceName,SeverityText,Body",
+  #           "severityTextExpression":"SeverityText",
+  #           "traceIdExpression":"TraceId",
+  #           "spanIdExpression":"SpanId",
+  #           "connection":"Local ClickHouse"
+  #         },
+  #         {
+  #           "from":{"databaseName":"default","tableName":"otel_traces"},
+  #           "kind":"trace",
+  #           "timestampValueExpression":"Timestamp",
+  #           "name":"Traces",
+  #           "displayedTimestampValueExpression":"Timestamp",
+  #           "implicitColumnExpression":"SpanName",
+  #           "serviceNameExpression":"ServiceName",
+  #           "eventAttributesExpression":"SpanAttributes",
+  #           "resourceAttributesExpression":"ResourceAttributes",
+  #           "defaultTableSelectExpression":"Timestamp,ServiceName,StatusCode,round(Duration/1e6),SpanName",
+  #           "traceIdExpression":"TraceId",
+  #           "spanIdExpression":"SpanId",
+  #           "durationExpression":"Duration",
+  #           "parentSpanIdExpression":"ParentSpanId",
+  #           "spanNameExpression":"SpanName",
+  #           "spanKindExpression":"SpanKind",
+  #           "statusCodeExpression":"StatusCode",
+  #           "connection":"Local ClickHouse"
+  #         }
+  #       ]
+  #   volumes:
+  #     - ./hyperdx-config:/app/config
+  #   depends_on:
+  #     - clickhouse
+  #     - mysql
+  #     - otel-collector
+  #     - mongodb
 
 
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
-    container_name: otel-collector
-    command: ["--config=/etc/otel-collector-config.yml"]
-    volumes:
-      - ./hyperdx-config/otel-collector-config.yml:/etc/otel-collector-config.yml
-    ports:
-      - "4317:4317"
-      - "4318:4318"
-    networks:
-      - auto-net
-    depends_on:
-      clickhouse:
-        condition: service_healthy
+  # otel-collector:
+  #   image: otel/opentelemetry-collector-contrib:latest
+  #   container_name: otel-collector
+  #   command: ["--config=/etc/otel-collector-config.yml"]
+  #   volumes:
+  #     - ./hyperdx-config/otel-collector-config.yml:/etc/otel-collector-config.yml
+  #   ports:
+  #     - "4317:4317"
+  #     - "4318:4318"
+  #   networks:
+  #     - auto-net
+  #   depends_on:
+  #     clickhouse:
+  #       condition: service_healthy
 
-  mongodb:
-    image: mongo:5.0.32-focal
-    container_name: mongodb
-    networks:
-      - auto-net
-    volumes:
-      - mongodb_data:/data/db
-    restart: unless-stopped
+  # mongodb:
+  #   image: mongo:5.0.32-focal
+  #   container_name: mongodb
+  #   networks:
+  #     - auto-net
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #   restart: unless-stopped
