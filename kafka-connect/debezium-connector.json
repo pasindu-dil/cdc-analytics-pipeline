@@ -1,0 +1,26 @@
+
+{
+  "name": "mysql-bsmsc-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "tasks.max": "1",
+    "topic.prefix": "dbserver1",
+    "database.hostname": "mysql",
+    "database.port": "3306",
+    "database.user": "root",
+    "database.password": "root",
+    "database.server.id": "184054",
+    "database.include.list": "bsmsc",
+    "schema.history.internal.kafka.bootstrap.servers": "kafka:29092",
+    "schema.history.internal.kafka.topic": "dbserver1.schema-changes",
+    "snapshot.mode": "initial",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.add.fields": "op,ts_ms",
+    "transforms.unwrap.delete.handling.mode": "rewrite"
+  }
+}
