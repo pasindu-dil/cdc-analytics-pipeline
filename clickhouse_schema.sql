@@ -3337,12 +3337,12 @@ CREATE TABLE IF NOT EXISTS bsmsc.payments
     billing_account_id        Int32,
     user_id                   Nullable(Int32),
     comment                   String,
-    created_at                DateTime,
-    updated_at                DateTime,
-    op                        String DEFAULT 'c'
+    created_at                DateTime('UTC'),
+    updated_at                DateTime('UTC'),  
+    op                        String DEFAULT 'c',
+    __ts_ms                   UInt64 DEFAULT toUnixTimestamp64Milli(now64())
 )
-ENGINE = ReplacingMergeTree(updated_at)
-PARTITION BY toYYYYMM(created_at)
+ENGINE = ReplacingMergeTree(__ts_ms)
 ORDER BY (id)
 SETTINGS index_granularity = 8192;
 
