@@ -48,6 +48,8 @@ services:
     depends_on:
       zookeeper:
         condition: service_healthy
+      mysql:
+        condition: service_healthy
     ports:
       - "9092:9092"
     environment:
@@ -68,48 +70,48 @@ services:
   # ─────────────────────────────────────────
   # 3. KAFKA UI
   # ─────────────────────────────────────────
-  # kafka-ui:
-  #   image: provectuslabs/kafka-ui:latest
-  #   container_name: kafka-ui
-  #   networks:
-  #     - auto-net
-  #   depends_on:
-  #     kafka:
-  #       condition: service_healthy
-  #   ports:
-  #     - "8080:8080"
-  #   environment:
-  #     KAFKA_CLUSTERS_0_NAME: local
-  #     KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    networks:
+      - auto-net
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
  
   # ─────────────────────────────────────────
   # 4. MYSQL
   # ─────────────────────────────────────────
-  # mysql:
-  #   image: mysql:8.0
-  #   container_name: mysql
-  #   networks:
-  #     - auto-net
-  #   ports:
-  #     - "3308:3306"
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: bsmsc
-  #     MYSQL_ROOT_USER: root
-  #   command:
-  #     - --server-id=1
-  #     - --log-bin=mysql-bin
-  #     - --binlog-format=ROW
-  #     - --binlog-row-image=FULL
-  #     - --expire-logs-days=10
-  #   volumes:
-  #     - mysql-data:/var/lib/mysql
-  #     - ./mysql-init:/docker-entrypoint-initdb.d
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 10
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    networks:
+      - auto-net
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bsmsc
+      MYSQL_ROOT_USER: root
+    command:
+      - --server-id=1
+      - --log-bin=mysql-bin
+      - --binlog-format=ROW
+      - --binlog-row-image=FULL
+      - --expire-logs-days=10
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
  
   # ─────────────────────────────────────────
   # 5. DEBEZIUM KAFKA CONNECT
@@ -164,6 +166,7 @@ services:
     volumes:
       - clickhouse-data:/var/lib/clickhouse
       - ./clickhouse-init:/docker-entrypoint-initdb.d
+      # - ./clickhouse-config/allow_outfile.xml:/etc/clickhouse-server/users.d/allow_outfile.xml
     ulimits:
       nofile:
         soft: 262144
